@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'Trip.dart';
 
@@ -74,18 +75,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 elevation: 4,
                 child: ListTile(
-                    leading: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.location_on, color: Colors.blueGrey[700]), // Starting point icon
-                        const SizedBox(height: 4),
-                        Container(
-                          height: 16,
-                          width: 1, // Vertical bar width
-                          color: Colors.blueGrey[700], // Vertical bar color
-                        ),
-                      ],
-                    ),
+                  leading: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.location_on, color: Colors.blueGrey[700]),
+                      // Starting point icon
+                      const SizedBox(height: 4),
+                      Container(
+                        height: 16,
+                        width: 1, // Vertical bar width
+                        color: Colors.blueGrey[700], // Vertical bar color
+                      ),
+                    ],
+                  ),
                   title: Row(
                     children: [
                       Text(
@@ -139,7 +141,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   onTap: () {
-                      Navigator.pushNamed(context, '/tripdetails',arguments: {'trip':trips[index]});
+                    Navigator.pushNamed(context, '/tripdetails',
+                        arguments: {'trip': trips[index]});
                   },
                 ),
               ),
@@ -192,7 +195,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               title: const Text("Logout"),
               leading: const Icon(Icons.logout_outlined),
-              onTap: () {},
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+              },
             ),
           ],
         ),

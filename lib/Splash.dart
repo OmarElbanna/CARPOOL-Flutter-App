@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -16,26 +18,31 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     Timer(const Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, '/login');
+      if (FirebaseAuth.instance.currentUser == null) {
+        print("No user");
+        Navigator.pushReplacementNamed(context, '/login');
+      } else {
+        Navigator.pushReplacementNamed(context, '/home');
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+        backgroundColor: Colors.white,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          height: 341,
-          width: 466,
-          child: Image.asset("images/Logo2.png"),
-        ),
-         SpinKitFadingCircle(
-          color: Colors.blueGrey[700],
-        ),
-      ],
-    ));
+          children: [
+            SizedBox(
+              height: 341,
+              width: 466,
+              child: Image.asset("images/Logo2.png"),
+            ),
+            SpinKitFadingCircle(
+              color: Colors.blueGrey[700],
+            ),
+          ],
+        ));
   }
 }
