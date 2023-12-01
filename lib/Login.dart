@@ -10,6 +10,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool isLoading = false;
   String? errorMessage;
   final _formKey = GlobalKey<FormState>();
   bool passwordVisible = false;
@@ -50,138 +51,149 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 100,
-                    child: Image.asset("images/download.png"),
-                  ),
-                  TextFormField(
-                    validator: validateEmail,
-                    controller: email,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      label: Text("Email"),
-                      suffixIcon: Icon(Icons.email),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextFormField(
-                    validator: validatePassword,
-                    controller: password,
-                    keyboardType: TextInputType.visiblePassword,
-                    obscureText: passwordVisible,
-                    decoration: InputDecoration(
-                      label: const Text("Password"),
-                      suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              passwordVisible = !passwordVisible;
-                            });
-                          },
-                          icon: Icon(passwordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off)),
-                      border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  MaterialButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15)),
-                    onPressed: () async {
-                      setState(() {
-                        errorMessage = null;
-                      });
-                      if (_formKey.currentState?.validate() ?? false) {
-                        try {
-                          final credential = await FirebaseAuth.instance
-                              .signInWithEmailAndPassword(
-                                  email: email.text, password: password.text);
-                          if(credential.user!.emailVerified){
-                            Navigator.pushReplacementNamed(context, '/home');
-                          }
-                          else{
-                            AwesomeDialog(
-                                context: context,
-                                dialogType: DialogType.error,
-                                animType: AnimType.rightSlide,
-                                title: 'Unverified Account',
-                                desc: 'Please check your email to verify your account',
-                      btnOkOnPress: () {},
-                      )..show();
-                          }
-                        } on FirebaseAuthException catch (e) {
-                          if (e.code == 'user-not-found') {
-                            setState(() {
-                              errorMessage = 'User not found';
-                            });
-                            print('No user found for that email.');
-                          } else if (e.code == 'wrong-password') {
-                            setState(() {
-                              errorMessage = 'Incorrect password';
-                            });
-                            print('Wrong password provided for that user.');
-                          } else {
-                            setState(() {
-                              errorMessage =
-                                  'Account is not found or incorrect password';
-                            });
-                          }
-                        }
-                      }
-                    },
-                    color: Colors.blueGrey[700],
-                    child: const Text(
-                      "Login",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("Don't have an account?"),
-                      MaterialButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/signup_s');
-                        },
-                        child: Text(
-                          "Signup here",
-                          style: TextStyle(
-                            color: Colors.blueGrey[700],
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 100,
+                          child: Image.asset("images/download.png"),
+                        ),
+                        TextFormField(
+                          validator: validateEmail,
+                          controller: email,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: const InputDecoration(
+                            label: Text("Email"),
+                            suffixIcon: Icon(Icons.email),
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
                           ),
                         ),
-                      )
-                    ],
-                  ),
-                  if (errorMessage != null)
-                    Text(
-                      errorMessage!,
-                      style: TextStyle(color: Colors.red),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          validator: validatePassword,
+                          controller: password,
+                          keyboardType: TextInputType.visiblePassword,
+                          obscureText: passwordVisible,
+                          decoration: InputDecoration(
+                            label: const Text("Password"),
+                            suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    passwordVisible = !passwordVisible;
+                                  });
+                                },
+                                icon: Icon(passwordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off)),
+                            border: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        MaterialButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15)),
+                          onPressed: () async {
+                            setState(() {
+                              errorMessage = null;
+                            });
+                            if (_formKey.currentState?.validate() ?? false) {
+                              try {
+                                isLoading = true;
+                                setState(() {});
+                                final credential = await FirebaseAuth.instance
+                                    .signInWithEmailAndPassword(
+                                        email: email.text,
+                                        password: password.text);
+                                isLoading = false;
+                                setState(() {});
+                                if (credential.user!.emailVerified) {
+                                  Navigator.pushReplacementNamed(
+                                      context, '/home');
+                                } else {
+                                  AwesomeDialog(
+                                    context: context,
+                                    dialogType: DialogType.error,
+                                    animType: AnimType.rightSlide,
+                                    title: 'Unverified Account',
+                                    desc:
+                                        'Please check your email to verify your account',
+                                    btnOkOnPress: () {},
+                                  )..show();
+                                }
+                              } on FirebaseAuthException catch (e) {
+                                if (e.code == 'user-not-found') {
+                                  setState(() {
+                                    errorMessage = 'User not found';
+                                  });
+                                  print('No user found for that email.');
+                                } else if (e.code == 'wrong-password') {
+                                  setState(() {
+                                    errorMessage = 'Incorrect password';
+                                  });
+                                  print(
+                                      'Wrong password provided for that user.');
+                                } else {
+                                  setState(() {
+                                    errorMessage =
+                                        'Account is not found or incorrect password';
+                                  });
+                                }
+                              }
+                            }
+                          },
+                          color: Colors.blueGrey[700],
+                          child: const Text(
+                            "Login",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text("Don't have an account?"),
+                            MaterialButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/signup_s');
+                              },
+                              child: Text(
+                                "Signup here",
+                                style: TextStyle(
+                                  color: Colors.blueGrey[700],
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        if (errorMessage != null)
+                          Text(
+                            errorMessage!,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                      ],
                     ),
-                ],
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }
