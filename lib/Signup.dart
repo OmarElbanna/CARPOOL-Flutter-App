@@ -1,7 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -219,18 +219,30 @@ class _SignupScreenState extends State<SignupScreen> {
                           email: email.text,
                           password: password.text,
                         );
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(credential.user!.uid)
+                            .set({
+                              'firstName': firstName.text,
+                              'lastName': lastName.text,
+                              'phone': phone.text
+                            })
+                            .then((value) => print("User Added"))
+                            .catchError(
+                                (error) => print("Failed to add user: $error"));
                         await credential.user!.sendEmailVerification();
                         AwesomeDialog(
                           context: context,
                           dialogType: DialogType.success,
                           animType: AnimType.rightSlide,
                           title: 'Verification Mail has been sent successfully',
-                          desc: 'Please check your email to verify your account',
+                          desc:
+                              'Please check your email to verify your account',
                           btnOkOnPress: () {
-                            Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, '/login', (route) => false);
                           },
                         )..show();
-
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'weak-password') {
                           setState(() {
