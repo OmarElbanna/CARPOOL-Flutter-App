@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:firebase_core/firebase_core.dart';
 import 'Account.dart';
 import 'Home.dart';
 import 'Login.dart';
@@ -8,7 +8,9 @@ import 'Signup.dart';
 import 'Splash.dart';
 import 'TripDetails.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MaterialApp(
     showSemanticsDebugger: false,
     debugShowCheckedModeBanner: false,
