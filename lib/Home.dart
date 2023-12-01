@@ -197,7 +197,8 @@ class _HomeScreenState extends State<HomeScreen> {
               leading: const Icon(Icons.logout_outlined),
               onTap: () async {
                 await FirebaseAuth.instance.signOut();
-                Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/login', (route) => false);
               },
             ),
           ],

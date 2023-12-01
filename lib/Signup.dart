@@ -206,28 +206,32 @@ class _SignupScreenState extends State<SignupScreen> {
                 MaterialButton(
                   onPressed: () async {
                     setState(() {
-                      errorMessage=null;
+                      errorMessage = null;
                     });
 
                     if (_formKey.currentState?.validate() ?? false) {
                       print("Form is Valid");
                       // Do signup logic
                       try {
-                        final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                        final credential = await FirebaseAuth.instance
+                            .createUserWithEmailAndPassword(
                           email: email.text,
                           password: password.text,
                         );
-                        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/home', (route) => false);
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'weak-password') {
                           setState(() {
-                            errorMessage= "An account already exists for that email.";
+                            errorMessage =
+                                "An account already exists for that email.";
                           });
                           print('The password provided is too weak.');
                         } else if (e.code == 'email-already-in-use') {
                           print('The account already exists for that email.');
                           setState(() {
-                            errorMessage= "An account already exists for that email.";
+                            errorMessage =
+                                "An account already exists for that email.";
                           });
                         }
                       } catch (e) {

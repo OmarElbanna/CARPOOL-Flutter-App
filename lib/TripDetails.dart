@@ -9,7 +9,6 @@ class TripDetailsScreen extends StatefulWidget {
 }
 
 class _TripDetailsScreenState extends State<TripDetailsScreen> {
-
   @override
   Widget build(BuildContext context) {
     Map data = ModalRoute.of(context)!.settings.arguments as Map;
@@ -139,7 +138,10 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                       );
                     });
               },
-              child: const Text('Book',style: TextStyle(color: Colors.white),),
+              child: const Text(
+                'Book',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),

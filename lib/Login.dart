@@ -21,6 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     return null;
   }
+
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Password is required';
@@ -99,37 +100,35 @@ class _LoginScreenState extends State<LoginScreen> {
                   MaterialButton(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15)),
-                    onPressed: () async{
-                    setState(() {
-                      errorMessage = null;
-                    });
-                    if (_formKey.currentState?.validate() ?? false) {
-                      try {
-                        final credential = await FirebaseAuth.instance
-                            .signInWithEmailAndPassword(
-                            email: email.text,
-                            password: password.text
-                        );
-                        Navigator.pushReplacementNamed(context, '/home');
-                      } on FirebaseAuthException catch (e) {
-                        if (e.code == 'user-not-found') {
-                          setState(() {
-                            errorMessage = 'User not found';
-                          });
-                          print('No user found for that email.');
-                        } else if (e.code == 'wrong-password') {
-                          setState(() {
-                            errorMessage = 'Incorrect password';
-                          });
-                          print('Wrong password provided for that user.');
-                        }
-                        else{
-                          setState(() {
-                            errorMessage = 'Account is not found or incorrect password';
-                          });
+                    onPressed: () async {
+                      setState(() {
+                        errorMessage = null;
+                      });
+                      if (_formKey.currentState?.validate() ?? false) {
+                        try {
+                          final credential = await FirebaseAuth.instance
+                              .signInWithEmailAndPassword(
+                                  email: email.text, password: password.text);
+                          Navigator.pushReplacementNamed(context, '/home');
+                        } on FirebaseAuthException catch (e) {
+                          if (e.code == 'user-not-found') {
+                            setState(() {
+                              errorMessage = 'User not found';
+                            });
+                            print('No user found for that email.');
+                          } else if (e.code == 'wrong-password') {
+                            setState(() {
+                              errorMessage = 'Incorrect password';
+                            });
+                            print('Wrong password provided for that user.');
+                          } else {
+                            setState(() {
+                              errorMessage =
+                                  'Account is not found or incorrect password';
+                            });
+                          }
                         }
                       }
-                    }
                     },
                     color: Colors.blueGrey[700],
                     child: const Text(
