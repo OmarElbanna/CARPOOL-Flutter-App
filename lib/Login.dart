@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -109,7 +110,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           final credential = await FirebaseAuth.instance
                               .signInWithEmailAndPassword(
                                   email: email.text, password: password.text);
-                          Navigator.pushReplacementNamed(context, '/home');
+                          if(credential.user!.emailVerified){
+                            Navigator.pushReplacementNamed(context, '/home');
+                          }
+                          else{
+                            AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.error,
+                                animType: AnimType.rightSlide,
+                                title: 'Unverified Account',
+                                desc: 'Please check your email to verify your account',
+                      btnOkOnPress: () {},
+                      )..show();
+                          }
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'user-not-found') {
                             setState(() {

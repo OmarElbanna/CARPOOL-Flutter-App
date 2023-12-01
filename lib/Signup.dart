@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -218,8 +219,18 @@ class _SignupScreenState extends State<SignupScreen> {
                           email: email.text,
                           password: password.text,
                         );
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, '/home', (route) => false);
+                        await credential.user!.sendEmailVerification();
+                        AwesomeDialog(
+                          context: context,
+                          dialogType: DialogType.success,
+                          animType: AnimType.rightSlide,
+                          title: 'Verification Mail has been sent successfully',
+                          desc: 'Please check your email to verify your account',
+                          btnOkOnPress: () {
+                            Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+                          },
+                        )..show();
+
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'weak-password') {
                           setState(() {

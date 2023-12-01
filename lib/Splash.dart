@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -18,11 +17,12 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     Timer(const Duration(seconds: 3), () {
-      if (FirebaseAuth.instance.currentUser == null) {
+      if (FirebaseAuth.instance.currentUser != null &&  FirebaseAuth.instance.currentUser!.emailVerified ) {
+
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
         print("No user");
         Navigator.pushReplacementNamed(context, '/login');
-      } else {
-        Navigator.pushReplacementNamed(context, '/home');
       }
     });
   }
