@@ -9,6 +9,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool passwordVisible = false;
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
 
   @override
   void initState() {
@@ -41,7 +43,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 100,
                   child: Image.asset("images/download.png"),
                 ),
-                 TextFormField(
+                TextFormField(
+                  controller: email,
                   keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(
                     label: Text("Email"),
@@ -54,6 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 20,
                 ),
                 TextFormField(
+                  controller: password,
                   keyboardType: TextInputType.visiblePassword,
                   obscureText: passwordVisible,
                   decoration: InputDecoration(
@@ -73,6 +77,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 20),
                 MaterialButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
                   onPressed: () {
                     Navigator.pushReplacementNamed(context, '/home');
                   },
