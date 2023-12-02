@@ -5,7 +5,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class AccountScreen extends StatefulWidget {
-  const AccountScreen({super.key});
+  final Function() updateCallback;
+
+  const AccountScreen({Key? key, required this.updateCallback})
+      : super(key: key);
 
   @override
   State<AccountScreen> createState() => _AccountScreenState();
@@ -157,27 +160,28 @@ class _AccountScreenState extends State<AccountScreen> {
                               .collection('users')
                               .doc(user.uid)
                               .update({
-                            'firstName': firstName.text,
-                            'lastName': lastName.text,
-                            'phone': phone.text
-                          }).then((value) => AwesomeDialog(
-                            context: context,
-                            dialogType: DialogType.success,
-                            animType: AnimType.rightSlide,
-                            title: 'Success',
-                            desc:
-                            'Successfully updated user account',
-                            btnOkOnPress: () {},
-                          )..show())
-                            .catchError((error) => AwesomeDialog(
-                            context: context,
-                            dialogType: DialogType.error,
-                            animType: AnimType.rightSlide,
-                            title: 'Error',
-                            desc:
-                            'Something wrong happened, please try again later',
-                            btnOkOnPress: () {},
-                          )..show());
+                                'firstName': firstName.text,
+                                'lastName': lastName.text,
+                                'phone': phone.text
+                              })
+                              .then((value) => AwesomeDialog(
+                                    context: context,
+                                    dialogType: DialogType.success,
+                                    animType: AnimType.rightSlide,
+                                    title: 'Success',
+                                    desc: 'Successfully updated user account',
+                                    btnOkOnPress: () {},
+                                  )..show())
+                              .catchError((error) => AwesomeDialog(
+                                    context: context,
+                                    dialogType: DialogType.error,
+                                    animType: AnimType.rightSlide,
+                                    title: 'Error',
+                                    desc:
+                                        'Something wrong happened, please try again later',
+                                    btnOkOnPress: () {},
+                                  )..show());
+                          widget.updateCallback();
                         }
                       },
                       color: Colors.blueGrey[700],

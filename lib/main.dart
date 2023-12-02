@@ -40,7 +40,9 @@ class _MyAppState extends State<MyApp> {
         '/login': (context) => const LoginScreen(),
         '/signup_s': (context) => const SignupScreen(),
         '/home': (context) => const HomeScreen(),
-        '/account': (context) => const AccountScreen(),
+        '/account': (context) => AccountScreen(
+              updateCallback: () {},
+            ),
         '/mytrips': (context) => const TripsScreen(),
         '/tripdetails': (context) => const TripDetailsScreen()
       },

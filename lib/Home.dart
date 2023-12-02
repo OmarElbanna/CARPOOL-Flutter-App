@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:carpool/Account.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'Trip.dart';
@@ -13,6 +15,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<Trip> trips = [];
+  late User user;
+
+  void updateUser() {
+    setState(() {});
+  }
 
   @override
   void initState() {
@@ -46,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
         to: "Triumph Square",
         time: "5:30 PM",
         price: 40));
+    user = FirebaseAuth.instance.currentUser!;
   }
 
   @override
@@ -151,59 +159,84 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       drawer: Drawer(
-        child: Column(
-          children: [
-            UserAccountsDrawerHeader(
-                decoration: BoxDecoration(color: Colors.blueGrey[700]),
-                currentAccountPicture: const CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      "https://media.licdn.com/dms/image/C4D03AQGFxldRxlU7Xg/profile-displayphoto-shrink_800_800/0/1661131775382?e=2147483647&v=beta&t=A1qCwqFSQT44KYD1geoOwQlFP9uqBBNMUgN4NFtyfK8"),
-                ),
-                accountName: GestureDetector(
-                  child: const Text(
-                    "Omar Elbanna",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                  ),
-                  onTap: () {},
-                ),
-                accountEmail: const Text("19P3904@eng.asu.edu.eg")),
-            ListTile(
-              title: const Text("Account"),
-              leading: const Icon(Icons.account_circle_rounded),
-              onTap: () {
-                Navigator.pop(context);
-                Timer(const Duration(milliseconds: 500), () {
-                  Navigator.pushNamed(context, '/account');
-                });
-              },
-            ),
-            const Divider(
-              thickness: 1,
-            ),
-            ListTile(
-                title: const Text("My Trips"),
-                leading: const Icon(Icons.history),
-                onTap: () {
-                  Navigator.pop(context);
-                  Timer(const Duration(milliseconds: 500), () {
-                    Navigator.pushNamed(context, '/mytrips');
-                  });
-                }),
-            const Divider(
-              thickness: 1,
-            ),
-            ListTile(
-              title: const Text("Logout"),
-              leading: const Icon(Icons.logout_outlined),
-              onTap: () async {
-                await FirebaseAuth.instance.signOut();
-                Navigator.pushNamedAndRemoveUntil(
-                    context, '/login', (route) => false);
-              },
-            ),
-          ],
-        ),
-      ),
+          child: FutureBuilder(
+              future: FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(user.uid)
+                  .get(),
+              builder: (con, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+                if (!snapshot.hasData || !snapshot.data!.exists) {
+                  return const Text('User data not found');
+                }
+                final userData = snapshot.data!.data() as Map<String, dynamic>;
+                return Column(
+                  children: [
+                    UserAccountsDrawerHeader(
+                        decoration: BoxDecoration(color: Colors.blueGrey[700]),
+                        currentAccountPicture: const CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              "https://media.licdn.com/dms/image/C4D03AQGFxldRxlU7Xg/profile-displayphoto-shrink_800_800/0/1661131775382?e=2147483647&v=beta&t=A1qCwqFSQT44KYD1geoOwQlFP9uqBBNMUgN4NFtyfK8"),
+                        ),
+                        accountName: GestureDetector(
+                          child: Text(
+                            "${userData['firstName']} ${userData['lastName']}",
+                            style: const TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                          ),
+                          onTap: () {},
+                        ),
+                        accountEmail: Text(user.email!)),
+                    ListTile(
+                      title: const Text("Account"),
+                      leading: const Icon(Icons.account_circle_rounded),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Timer(const Duration(milliseconds: 500), () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  AccountScreen(updateCallback: updateUser),
+                            ),
+                          );
+                        });
+                      },
+                    ),
+                    const Divider(
+                      thickness: 1,
+                    ),
+                    ListTile(
+                        title: const Text("My Trips"),
+                        leading: const Icon(Icons.history),
+                        onTap: () {
+                          Navigator.pop(context);
+                          Timer(const Duration(milliseconds: 500), () {
+                            Navigator.pushNamed(context, '/mytrips');
+                          });
+                        }),
+                    const Divider(
+                      thickness: 1,
+                    ),
+                    ListTile(
+                      title: const Text("Logout"),
+                      leading: const Icon(Icons.logout_outlined),
+                      onTap: () async {
+                        await FirebaseAuth.instance.signOut();
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/login', (route) => false);
+                      },
+                    ),
+                  ],
+                );
+              })),
     );
   }
 }
