@@ -20,6 +20,8 @@ class _LoginScreenState extends State<LoginScreen> {
   String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email is required';
+    } else if (!RegExp(r'^[\w-]+@eng\.asu\.edu\.eg$').hasMatch(value)) {
+      return 'Enter a valid email address with the domain @eng.asu.edu.eg';
     }
     return null;
   }
@@ -118,12 +120,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                     .signInWithEmailAndPassword(
                                         email: email.text,
                                         password: password.text);
-                                isLoading = false;
-                                setState(() {});
+
                                 if (credential.user!.emailVerified) {
                                   Navigator.pushReplacementNamed(
                                       context, '/home');
                                 } else {
+                                  isLoading = false;
+                                  setState(() {
+                                  });
                                   AwesomeDialog(
                                     context: context,
                                     dialogType: DialogType.error,
@@ -131,10 +135,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                     title: 'Unverified Account',
                                     desc:
                                         'Please check your email to verify your account',
-                                    btnOkOnPress: () {},
+                                    btnOkOnPress: () {
+                                    },
                                   )..show();
                                 }
                               } on FirebaseAuthException catch (e) {
+                                isLoading = false;
+                                setState(() {
+                                });
                                 if (e.code == 'user-not-found') {
                                   setState(() {
                                     errorMessage = 'User not found';
@@ -150,6 +158,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   setState(() {
                                     errorMessage =
                                         'Account is not found or incorrect password';
+                                    print(isLoading);
+                                    print(e.code);
                                   });
                                 }
                               }
