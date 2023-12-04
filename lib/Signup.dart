@@ -11,6 +11,7 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  bool isLoading = false;
   final _formKey = GlobalKey<FormState>();
   String? errorMessage;
 
@@ -96,7 +97,9 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
         child: Center(
             child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -211,6 +214,9 @@ class _SignupScreenState extends State<SignupScreen> {
                     });
 
                     if (_formKey.currentState?.validate() ?? false) {
+                      isLoading = true;
+                      setState(() {
+                      });
                       print("Form is Valid");
                       // Do signup logic
                       try {
@@ -231,6 +237,9 @@ class _SignupScreenState extends State<SignupScreen> {
                             .catchError(
                                 (error) => print("Failed to add user: $error"));
                         await credential.user!.sendEmailVerification();
+                        isLoading=false;
+                        setState(() {
+                        });
                         AwesomeDialog(
                           context: context,
                           dialogType: DialogType.success,
@@ -244,17 +253,20 @@ class _SignupScreenState extends State<SignupScreen> {
                           },
                         )..show();
                       } on FirebaseAuthException catch (e) {
+                        isLoading = false;
+                        setState(() {
+                        });
                         if (e.code == 'weak-password') {
                           setState(() {
                             errorMessage =
-                                "An account already exists for that email.";
+                                "The password provided is too weak.";
                           });
                           print('The password provided is too weak.');
                         } else if (e.code == 'email-already-in-use') {
-                          print('The account already exists for that email.');
+                          print('The account already exists for this email.');
                           setState(() {
                             errorMessage =
-                                "An account already exists for that email.";
+                                "An account already exists for this email.";
                           });
                         }
                       } catch (e) {
