@@ -100,218 +100,224 @@ class _SignupScreenState extends State<SignupScreen> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-        child: Center(
-            child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextFormField(
-                  controller: firstName,
-                  validator: validateFirstName,
-                  keyboardType: TextInputType.name,
-                  decoration: const InputDecoration(
-                    label: Text("First Name"),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  controller: lastName,
-                  validator: validateLastName,
-                  keyboardType: TextInputType.name,
-                  decoration: const InputDecoration(
-                    label: Text("Last Name"),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  controller: email,
-                  validator: validateEmail,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    suffixIcon: Icon(Icons.email),
-                    label: Text("Email"),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  controller: phone,
-                  validator: validatePhone,
-                  keyboardType: TextInputType.phone,
-                  decoration: const InputDecoration(
-                    suffixIcon: Icon(Icons.phone),
-                    label: Text("Phone Number"),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  controller: password,
-                  validator: validatePassword,
-                  keyboardType: TextInputType.visiblePassword,
-                  obscureText: passwordVisible,
-                  decoration: InputDecoration(
-                    label: const Text("Password"),
-                    suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            passwordVisible = !passwordVisible;
-                          });
-                        },
-                        icon: Icon(passwordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off)),
-                    border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  controller: confirmPassword,
-                  validator: (value) =>
-                      validateConfirmPassword(value, password.text),
-                  keyboardType: TextInputType.visiblePassword,
-                  obscureText: confirmPasswordVisible,
-                  decoration: InputDecoration(
-                    label: const Text("Confirm Password"),
-                    suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            confirmPasswordVisible = !confirmPasswordVisible;
-                          });
-                        },
-                        icon: Icon(confirmPasswordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off)),
-                    border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                MaterialButton(
-                  onPressed: () async {
-                    setState(() {
-                      errorMessage = null;
-                    });
-
-                    if (_formKey.currentState?.validate() ?? false) {
-                      isLoading = true;
-                      setState(() {
-                      });
-                      print("Form is Valid");
-                      // Do signup logic
-                      try {
-                        final credential = await FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
-                          email: email.text,
-                          password: password.text,
-                        );
-                        await FirebaseFirestore.instance
-                            .collection('users')
-                            .doc(credential.user!.uid)
-                            .set({
-                              'firstName': firstName.text,
-                              'lastName': lastName.text,
-                              'phone': phone.text
-                            })
-                            .then((value) => print("User Added"))
-                            .catchError(
-                                (error) => print("Failed to add user: $error"));
-                        await credential.user!.sendEmailVerification();
-                        isLoading=false;
-                        setState(() {
-                        });
-                        AwesomeDialog(
-                          context: context,
-                          dialogType: DialogType.success,
-                          animType: AnimType.rightSlide,
-                          title: 'Verification Mail has been sent successfully',
-                          desc:
-                              'Please check your email to verify your account',
-                          btnOkOnPress: () {
-                            Navigator.pushNamedAndRemoveUntil(
-                                context, '/login', (route) => false);
-                          },
-                        )..show();
-                      } on FirebaseAuthException catch (e) {
-                        isLoading = false;
-                        setState(() {
-                        });
-                        if (e.code == 'weak-password') {
-                          setState(() {
-                            errorMessage =
-                                "The password provided is too weak.";
-                          });
-                          print('The password provided is too weak.');
-                        } else if (e.code == 'email-already-in-use') {
-                          print('The account already exists for this email.');
-                          setState(() {
-                            errorMessage =
-                                "An account already exists for this email.";
-                          });
-                        }
-                      } catch (e) {
-                        print(e);
-                      }
-                    }
-                  },
-                  color: Colors.blueGrey[700],
-                  child: const Text(
-                    "Signup",
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Already have an account"),
-                    GestureDetector(
-                      onTap: () {
-                        // Navigator.popAndPushNamed(context, '/login');
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, '/login', (route) => false);
-                      },
-                      child: Text(
-                        "  Login",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blueGrey[700]),
+              child: Center(
+                  child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextFormField(
+                        controller: firstName,
+                        validator: validateFirstName,
+                        keyboardType: TextInputType.name,
+                        decoration: const InputDecoration(
+                          label: Text("First Name"),
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5))),
+                        ),
                       ),
-                    )
-                  ],
-                ),
-                if (errorMessage != null)
-                  Text(
-                    errorMessage!,
-                    style: TextStyle(color: Colors.red),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      TextFormField(
+                        controller: lastName,
+                        validator: validateLastName,
+                        keyboardType: TextInputType.name,
+                        decoration: const InputDecoration(
+                          label: Text("Last Name"),
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5))),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      TextFormField(
+                        controller: email,
+                        validator: validateEmail,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: const InputDecoration(
+                          suffixIcon: Icon(Icons.email),
+                          label: Text("Email"),
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5))),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      TextFormField(
+                        controller: phone,
+                        validator: validatePhone,
+                        keyboardType: TextInputType.phone,
+                        decoration: const InputDecoration(
+                          suffixIcon: Icon(Icons.phone),
+                          label: Text("Phone Number"),
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5))),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      TextFormField(
+                        controller: password,
+                        validator: validatePassword,
+                        keyboardType: TextInputType.visiblePassword,
+                        obscureText: passwordVisible,
+                        decoration: InputDecoration(
+                          label: const Text("Password"),
+                          suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  passwordVisible = !passwordVisible;
+                                });
+                              },
+                              icon: Icon(passwordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off)),
+                          border: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5))),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      TextFormField(
+                        controller: confirmPassword,
+                        validator: (value) =>
+                            validateConfirmPassword(value, password.text),
+                        keyboardType: TextInputType.visiblePassword,
+                        obscureText: confirmPasswordVisible,
+                        decoration: InputDecoration(
+                          label: const Text("Confirm Password"),
+                          suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  confirmPasswordVisible =
+                                      !confirmPasswordVisible;
+                                });
+                              },
+                              icon: Icon(confirmPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off)),
+                          border: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5))),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      MaterialButton(
+                        onPressed: () async {
+                          setState(() {
+                            errorMessage = null;
+                          });
+
+                          if (_formKey.currentState?.validate() ?? false) {
+                            isLoading = true;
+                            setState(() {});
+                            print("Form is Valid");
+                            // Do signup logic
+                            try {
+                              final credential = await FirebaseAuth.instance
+                                  .createUserWithEmailAndPassword(
+                                email: email.text,
+                                password: password.text,
+                              );
+                              await FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(credential.user!.uid)
+                                  .set({
+                                    'firstName': firstName.text,
+                                    'lastName': lastName.text,
+                                    'phone': phone.text
+                                  })
+                                  .then((value) => print("User Added"))
+                                  .catchError((error) =>
+                                      print("Failed to add user: $error"));
+                              await credential.user!.sendEmailVerification();
+                              isLoading = false;
+                              setState(() {});
+                              AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.success,
+                                animType: AnimType.rightSlide,
+                                title:
+                                    'Verification Mail has been sent successfully',
+                                desc:
+                                    'Please check your email to verify your account',
+                                btnOkOnPress: () {
+                                  Navigator.pushNamedAndRemoveUntil(
+                                      context, '/login', (route) => false);
+                                },
+                              )..show();
+                            } on FirebaseAuthException catch (e) {
+                              isLoading = false;
+                              setState(() {});
+                              if (e.code == 'weak-password') {
+                                setState(() {
+                                  errorMessage =
+                                      "The password provided is too weak.";
+                                });
+                                print('The password provided is too weak.');
+                              } else if (e.code == 'email-already-in-use') {
+                                print(
+                                    'The account already exists for this email.');
+                                setState(() {
+                                  errorMessage =
+                                      "An account already exists for this email.";
+                                });
+                              }
+                            } catch (e) {
+                              print(e);
+                            }
+                          }
+                        },
+                        color: Colors.blueGrey[700],
+                        child: const Text(
+                          "Signup",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Already have an account"),
+                          GestureDetector(
+                            onTap: () {
+                              // Navigator.popAndPushNamed(context, '/login');
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context, '/login', (route) => false);
+                            },
+                            child: Text(
+                              "  Login",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blueGrey[700]),
+                            ),
+                          )
+                        ],
+                      ),
+                      if (errorMessage != null)
+                        Text(
+                          errorMessage!,
+                          style: TextStyle(color: Colors.red),
+                        ),
+                    ],
                   ),
-              ],
+                ),
+              )),
             ),
-          ),
-        )),
-      ),
     );
   }
 }

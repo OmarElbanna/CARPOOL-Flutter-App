@@ -126,8 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       context, '/home');
                                 } else {
                                   isLoading = false;
-                                  setState(() {
-                                  });
+                                  setState(() {});
                                   AwesomeDialog(
                                     context: context,
                                     dialogType: DialogType.error,
@@ -135,14 +134,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                     title: 'Unverified Account',
                                     desc:
                                         'Please check your email to verify your account',
-                                    btnOkOnPress: () {
-                                    },
+                                    btnOkOnPress: () {},
                                   )..show();
                                 }
                               } on FirebaseAuthException catch (e) {
                                 isLoading = false;
-                                setState(() {
-                                });
+                                setState(() {});
                                 if (e.code == 'user-not-found') {
                                   setState(() {
                                     errorMessage = 'User not found';
