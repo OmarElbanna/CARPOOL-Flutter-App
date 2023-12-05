@@ -30,6 +30,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
             const Expanded(
               flex: 8,
               child: GoogleMap(
+                // markers: ,
+                // polylines: ,
                 initialCameraPosition: CameraPosition(
                   target: LatLng(30.064691251883925, 31.279170289931916),
                   zoom: 17.0,

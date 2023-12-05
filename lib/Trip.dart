@@ -1,7 +1,7 @@
 class Trip{
   String? from;
   String? to;
-  double? price;
+  int? price;
   String? time;
   String? status;
 

@@ -98,7 +98,10 @@ class _SignupScreenState extends State<SignupScreen> {
         centerTitle: true,
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(
+              child: CircularProgressIndicator(
+              color: Colors.white,
+            ))
           : SingleChildScrollView(
               child: Center(
                   child: Padding(

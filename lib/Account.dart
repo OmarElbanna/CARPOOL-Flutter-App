@@ -64,7 +64,9 @@ class _AccountScreenState extends State<AccountScreen> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: Colors.white,
+              ),
             );
           }
           if (snapshot.hasError) {

@@ -54,7 +54,10 @@ class _LoginScreenState extends State<LoginScreen> {
         centerTitle: true,
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(
+              child: CircularProgressIndicator(
+              color: Colors.white,
+            ))
           : SingleChildScrollView(
               child: Center(
                 child: Padding(
