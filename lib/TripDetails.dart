@@ -2,55 +2,54 @@ import 'dart:async';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'Trip.dart';
 
 class TripDetailsScreen extends StatefulWidget {
-  const TripDetailsScreen({super.key});
+  final Trip data;
+  const TripDetailsScreen({super.key,required this.data});
 
   @override
   State<TripDetailsScreen> createState() => _TripDetailsScreenState();
 }
 
 // Starting point latitude
-double _originLatitude = 30.064691251883925;
-// Starting point longitude
-double _originLongitude = 31.279170289931916;
-// Destination latitude
-double _destLatitude = 30.074090;
-// Destination Longitude
-double _destLongitude = 31.321231;
+
 Map<MarkerId, Marker> markers = {};
 PolylinePoints polylinePoints = PolylinePoints();
 Map<PolylineId, Polyline> polylines = {};
 
 class _TripDetailsScreenState extends State<TripDetailsScreen> {
   Completer<GoogleMapController> _controller = Completer();
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(_originLatitude, _originLongitude),
-    zoom: 12,
-  );
+
 
 
   @override
   void initState() {
+
+    super.initState();
+    Trip data = widget.data;
+    double originLatitude = data.from_lat!;
+    double originLongitude = data.from_lng!;
+
+    double destLatitude = data.to_lat!;
+    double destLongitude = data.to_lng!;
     _addMarker(
-      LatLng(_originLatitude, _originLongitude),
+      LatLng(originLatitude, originLongitude),
       "origin",
       BitmapDescriptor.defaultMarker,
     );
 
     // Add destination marker
     _addMarker(
-      LatLng(_destLatitude, _destLongitude),
+      LatLng(destLatitude, destLongitude),
       "destination",
       BitmapDescriptor.defaultMarkerWithHue(90),
     );
 
-    _getPolyline();
-    super.initState();
+      // _getPolyline();
   }
   @override
   Widget build(BuildContext context) {
-    Map data = ModalRoute.of(context)!.settings.arguments as Map;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueGrey[700],
@@ -71,7 +70,10 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
               child: GoogleMap(
                 markers: Set<Marker>.of(markers.values),
                 polylines: Set<Polyline>.of(polylines.values),
-                initialCameraPosition: _kGooglePlex,
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(widget.data.from_lat!, widget.data.from_lng!),
+                  zoom: 12,
+                ),
                 onMapCreated: (controller) {
                   _controller.complete(controller);
                 },
@@ -103,12 +105,12 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                   title: Row(
                     children: [
                       Text(
-                        '${data['trip'].from}',
+                        '${widget.data.from}',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       const Icon(Icons.arrow_right_alt),
                       Text(
-                        '${data['trip'].to}',
+                        '${widget.data.to}',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -121,7 +123,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                           Icon(Icons.location_on, color: Colors.blueGrey[700]),
                           // Destination icon
                           const SizedBox(width: 4),
-                          Text('Destination: ${data['trip'].to}'),
+                          Text('Destination: ${widget.data.to}'),
                         ],
                       ),
                       Row(
@@ -133,7 +135,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                                 Icons.access_time_filled,
                                 color: Colors.blueGrey[700],
                               ),
-                              Text(' Time: ${data['trip'].time}'),
+                              Text(' Time: ${widget.data.time}'),
                             ],
                           ),
                           Row(
@@ -143,7 +145,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                                 color: Colors.green,
                               ),
                               Text(
-                                ' Price: ${data['trip'].price}',
+                                ' Price: ${widget.data.price!}',
                                 style: const TextStyle(color: Colors.green),
                               ),
                             ],
@@ -211,8 +213,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       "AIzaSyC-baBp8s3PqyYlA51eEXUjXE1tKC9OvvI",
-      PointLatLng(_originLatitude, _originLongitude),
-      PointLatLng(_destLatitude, _destLongitude),
+      PointLatLng(widget.data.from_lat!, widget.data.from_lng!),
+      PointLatLng(widget.data.to_lat!, widget.data.to_lng!),
       travelMode: TravelMode.driving,
     );
     if (result.points.isNotEmpty) {

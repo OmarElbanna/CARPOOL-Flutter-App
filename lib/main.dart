@@ -44,7 +44,6 @@ class _MyAppState extends State<MyApp> {
               updateCallback: () {},
             ),
         '/mytrips': (context) => const TripsScreen(),
-        '/tripdetails': (context) => const TripDetailsScreen()
       },
     );
   }
