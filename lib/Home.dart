@@ -210,9 +210,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     UserAccountsDrawerHeader(
                         decoration: BoxDecoration(color: Colors.blueGrey[700]),
-                        currentAccountPicture: const CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              "https://media.licdn.com/dms/image/C4D03AQGFxldRxlU7Xg/profile-displayphoto-shrink_800_800/0/1661131775382?e=2147483647&v=beta&t=A1qCwqFSQT44KYD1geoOwQlFP9uqBBNMUgN4NFtyfK8"),
+                        currentAccountPicture:  const CircleAvatar(
+                          radius: 200,
+                          backgroundImage: AssetImage("images/download.png"),
                         ),
                         accountName: GestureDetector(
                           child: Text(

@@ -104,7 +104,6 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Icon(Icons.location_on, color: Colors.blueGrey[700]),
-                      // Starting point icon
                       const SizedBox(height: 4),
                       Container(
                         height: 25,
@@ -138,7 +137,6 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                         ],
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
                             children: [
@@ -147,18 +145,6 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                                 color: Colors.blueGrey[700],
                               ),
                               Text(' Time: $timeToShow'),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.attach_money,
-                                color: Colors.green,
-                              ),
-                              Text(
-                                ' Price: ${widget.data.price!}',
-                                style: const TextStyle(color: Colors.green),
-                              ),
                             ],
                           ),
                         ],
@@ -176,10 +162,27 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                         ],
                       ),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Icon(Icons.color_lens_rounded,
-                              color: Colors.blueGrey[700]),
-                          Text("Car Color : ${widget.data.carColor!}"),
+                          Row(
+                            children: [
+                              Icon(Icons.color_lens_rounded,
+                                  color: Colors.blueGrey[700]),
+                              Text("Car Color : ${widget.data.carColor!}"),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.attach_money,
+                                color: Colors.green,
+                              ),
+                              Text(
+                                ' Price: ${widget.data.price!}',
+                                style: const TextStyle(color: Colors.green),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ],
@@ -258,7 +261,10 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                       style: TextStyle(color: Colors.white),
                     ),
                   )
-                : Text("Status : ${widget.data.status}",style: TextStyle(color: Colors.black,fontSize: 25),),
+                : Text(
+                    "Status : ${widget.data.status}",
+                    style: TextStyle(color: Colors.black, fontSize: 25),
+                  ),
           ],
         ),
       ),
