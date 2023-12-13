@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'Trip.dart';
 import 'Firestore_Queries.dart';
+import 'TripDetails.dart';
 
 class TripsScreen extends StatefulWidget {
   const TripsScreen({super.key});
@@ -145,7 +146,39 @@ class _TripsScreenState extends State<TripsScreen> {
                         )
                       ],
                     ),
-                    onTap: () {},
+                    onTap: () async {
+                      {
+                        String driverId = trips[index]['details']['driverId'];
+                        final driverDoc = await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(driverId)
+                            .get();
+                        final driverInfo = driverDoc.data();
+                        Trip trip = Trip(
+                            from: trips[index]['details']['from'],
+                            to: trips[index]['details']['to'],
+                            price: trips[index]['details']['price'],
+                            time: trips[index]['details']['time'].toDate(),
+                            from_lat: trips[index]['details']['from_lat'],
+                            from_lng: trips[index]['details']['from_lng'],
+                            to_lat: trips[index]['details']['to_lat'],
+                            to_lng: trips[index]['details']['to_lng'],
+                            driverName:
+                                "${driverInfo!['firstName']} ${driverInfo['lastName']}",
+                            carModel: driverInfo['carModel'],
+                            carColor: driverInfo['carColor'],
+                            status: trips[index]['status']);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TripDetailsScreen(
+                              data: trip,
+                              isBooking: false,
+                            ),
+                          ),
+                        );
+                      }
+                    },
                   ),
                 ),
               );

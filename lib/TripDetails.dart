@@ -8,8 +8,10 @@ import 'Trip.dart';
 
 class TripDetailsScreen extends StatefulWidget {
   final Trip data;
+  final bool isBooking;
 
-  const TripDetailsScreen({super.key, required this.data});
+  const TripDetailsScreen(
+      {super.key, required this.data, required this.isBooking});
 
   @override
   State<TripDetailsScreen> createState() => _TripDetailsScreenState();
@@ -55,12 +57,19 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueGrey[700],
-        title: const Text(
-          "Confirm Booking",
-          style: TextStyle(
-            fontSize: 20,
-          ),
-        ),
+        title: widget.isBooking
+            ? const Text(
+                "Confirm Booking",
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              )
+            : const Text(
+                "Trip Details",
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
         centerTitle: true,
       ),
       body: Padding(
@@ -98,7 +107,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                       // Starting point icon
                       const SizedBox(height: 4),
                       Container(
-                        height: 16,
+                        height: 25,
                         width: 1,
                         color: Colors.blueGrey[700],
                       ),
@@ -168,7 +177,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                       ),
                       Row(
                         children: [
-                          Icon(Icons.color_lens_rounded, color: Colors.blueGrey[700]),
+                          Icon(Icons.color_lens_rounded,
+                              color: Colors.blueGrey[700]),
                           Text("Car Color : ${widget.data.carColor!}"),
                         ],
                       ),
@@ -177,72 +187,78 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                 ),
               ),
             ),
-            MaterialButton(
-              color: Colors.blueGrey[700],
-              onPressed: () async {
-                String userId = FirebaseAuth.instance.currentUser!.uid;
-                String tripId = widget.data.id!;
-                QuerySnapshot<Map<String, dynamic>> existingRequests =
-                    await FirebaseFirestore.instance
-                        .collection('requests')
-                        .where('userId', isEqualTo: userId)
-                        .where('tripId', isEqualTo: tripId)
-                        .get();
+            widget.isBooking
+                ? MaterialButton(
+                    color: Colors.blueGrey[700],
+                    onPressed: () async {
+                      String userId = FirebaseAuth.instance.currentUser!.uid;
+                      String tripId = widget.data.id!;
+                      QuerySnapshot<Map<String, dynamic>> existingRequests =
+                          await FirebaseFirestore.instance
+                              .collection('requests')
+                              .where('userId', isEqualTo: userId)
+                              .where('tripId', isEqualTo: tripId)
+                              .get();
 
-                if (existingRequests.docs.isEmpty) {
-                  await FirebaseFirestore.instance.collection('requests').add({
-                    'userId': FirebaseAuth.instance.currentUser!.uid,
-                    'tripId': widget.data.id,
-                    'status': 'requested',
-                  });
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Booking Successful'),
-                          content: const Text(
-                              'Your trip has been booked successfully!'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text(
-                                'OK',
-                                style: TextStyle(color: Colors.blueGrey[700]),
-                              ),
-                            ),
-                          ],
-                        );
-                      });
-                } else {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Alert'),
-                          content: const Text(
-                              'You have already booked this trip, check my trips page'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text(
-                                'OK',
-                                style: TextStyle(color: Colors.blueGrey[700]),
-                              ),
-                            ),
-                          ],
-                        );
-                      });
-                }
-              },
-              child: const Text(
-                'Book',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
+                      if (existingRequests.docs.isEmpty) {
+                        await FirebaseFirestore.instance
+                            .collection('requests')
+                            .add({
+                          'userId': FirebaseAuth.instance.currentUser!.uid,
+                          'tripId': widget.data.id,
+                          'status': 'requested',
+                        });
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Booking Successful'),
+                                content: const Text(
+                                    'Your trip has been booked successfully!'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text(
+                                      'OK',
+                                      style: TextStyle(
+                                          color: Colors.blueGrey[700]),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            });
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Alert'),
+                                content: const Text(
+                                    'You have already booked this trip, check my trips page'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text(
+                                      'OK',
+                                      style: TextStyle(
+                                          color: Colors.blueGrey[700]),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            });
+                      }
+                    },
+                    child: const Text(
+                      'Book',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                : Text("Status : ${widget.data.status}",style: TextStyle(color: Colors.black,fontSize: 25),),
           ],
         ),
       ),
