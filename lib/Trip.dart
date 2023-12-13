@@ -4,7 +4,7 @@ class Trip{
   String? from;
   String? to;
   int? price;
-  String? time;
+  DateTime? time;
   String? status;
   double? from_lat;
   double? from_lng;

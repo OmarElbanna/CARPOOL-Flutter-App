@@ -25,35 +25,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    trips.add(Trip(
-        from: "Madinaty Gate 1",
-        to: "ASUFE Gate 3",
-        time: "7:30 AM",
-        price: 70));
-    trips.add(Trip(
-        from: "Rehab Gate 5", to: "ASUFE Gate 4", time: "7:30 AM", price: 60));
-    trips.add(Trip(
-        from: "Downtown Mall", to: "ASUFE Gate 3", time: "7:30 AM", price: 50));
-    trips.add(Trip(
-        from: "Triumph Square",
-        to: "ASUFE Gate 4",
-        time: "7:30 AM",
-        price: 40));
-
-    trips.add(Trip(
-        from: "ASUFE Gate 3",
-        to: "Madinaty Gate 1",
-        time: "5:30 PM",
-        price: 70));
-    trips.add(Trip(
-        from: "ASUFE Gate 4", to: "Rehab Gate 5", time: "5:30 PM", price: 60));
-    trips.add(Trip(
-        from: "ASUFE Gate 3", to: "Downtown Mall", time: "5:30 PM", price: 50));
-    trips.add(Trip(
-        from: "ASUFE Gate 4",
-        to: "Triumph Square",
-        time: "5:30 PM",
-        price: 40));
     user = FirebaseAuth.instance.currentUser!;
   }
 
@@ -73,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Center(
           child: FutureBuilder(
-        future: FirebaseFirestore.instance.collection('trips').get(),
+        future: FirebaseFirestore.instance.collection('trips').where('time',isGreaterThan: DateTime.now()).get(),
         builder: (con, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -87,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return const Text(
-              'No available trips',
+              'No available upcoming trips',
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 20,
@@ -101,6 +72,9 @@ class _HomeScreenState extends State<HomeScreen> {
           return ListView.builder(
             itemCount: firebaseTrips.length,
             itemBuilder: (context, index) {
+              DateTime date = firebaseTrips[index]['time'].toDate();
+              String dateToShow = "${date.day}/${date.month}/${date.year}";
+              String timeToShow = "${date.hour}:${date.minute}";
               return Padding(
                 padding: const EdgeInsets.all(3),
                 child: Card(
@@ -145,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 color: Colors.blueGrey[700]),
                             // Destination icon
                             const SizedBox(width: 4),
-                            Text('Destination: ${firebaseTrips[index]['to']}'),
+                            Text('Date: $dateToShow'),
                           ],
                         ),
                         Row(
@@ -157,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Icons.access_time_filled,
                                   color: Colors.blueGrey[700],
                                 ),
-                                Text(' Time: ${firebaseTrips[index]['time']}'),
+                                Text(' Time: $timeToShow'),
                               ],
                             ),
                             Row(
@@ -177,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     onTap: () {
-                      Trip trip = Trip(from: firebaseTrips[index]['from'],to: firebaseTrips[index]['to'],price: firebaseTrips[index]['price'],time: firebaseTrips[index]['time'],
+                      Trip trip = Trip(from: firebaseTrips[index]['from'],to: firebaseTrips[index]['to'],price: firebaseTrips[index]['price'],time: firebaseTrips[index]['time'].toDate(),
                       from_lat: firebaseTrips[index]['from_lat'],from_lng: firebaseTrips[index]['from_lng'],to_lat: firebaseTrips[index]['to_lat'],to_lng:firebaseTrips[index]['to_lng'],id:firebaseTrips[index].id  );
                       Navigator.push(
                         context,

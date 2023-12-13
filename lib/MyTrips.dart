@@ -18,18 +18,6 @@ class _TripsScreenState extends State<TripsScreen> {
   @override
   void initState() {
     super.initState();
-    trips.add(Trip(
-        from: "Madinaty Gate 1",
-        to: "ASUFE Gate 3",
-        time: "7:30 AM",
-        price: 70,
-        status: "Completed"));
-    trips.add(Trip(
-        from: "ASUFE Gate 3",
-        to: "Madinaty Gate 1",
-        time: "5:30 PM",
-        price: 70,
-        status: "Booked"));
     user = FirebaseAuth.instance.currentUser!;
   }
 
@@ -74,6 +62,9 @@ class _TripsScreenState extends State<TripsScreen> {
           return ListView.builder(
             itemCount: trips.length,
             itemBuilder: (context, index) {
+              DateTime date = trips[index]['details']['time'].toDate();
+              String dateToShow = "${date.day}/${date.month}/${date.year}";
+              String timeToShow = "${date.hour}:${date.minute}";
               return Padding(
                 padding: const EdgeInsets.all(3),
                 child: Card(
@@ -117,7 +108,7 @@ class _TripsScreenState extends State<TripsScreen> {
                                 color: Colors.blueGrey[700]),
                             const SizedBox(width: 4),
                             Text(
-                                'Destination: ${trips[index]['details']['to']}'),
+                                'Date: $dateToShow'),
                           ],
                         ),
                         Row(
@@ -130,7 +121,7 @@ class _TripsScreenState extends State<TripsScreen> {
                                   color: Colors.blueGrey[700],
                                 ),
                                 Text(
-                                    ' Time: ${trips[index]['details']['time']}'),
+                                    ' Time: $timeToShow'),
                               ],
                             ),
                             Row(

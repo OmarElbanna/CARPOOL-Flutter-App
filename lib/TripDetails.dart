@@ -15,8 +15,6 @@ class TripDetailsScreen extends StatefulWidget {
   State<TripDetailsScreen> createState() => _TripDetailsScreenState();
 }
 
-// Starting point latitude
-
 Map<MarkerId, Marker> markers = {};
 PolylinePoints polylinePoints = PolylinePoints();
 Map<PolylineId, Polyline> polylines = {};
@@ -25,10 +23,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
   Completer<GoogleMapController> _controller = Completer();
 
 
-
   @override
   void initState() {
-
     super.initState();
     Trip data = widget.data;
     double originLatitude = data.from_lat!;
@@ -49,10 +45,14 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
       BitmapDescriptor.defaultMarkerWithHue(90),
     );
 
+
       // _getPolyline();
   }
   @override
   Widget build(BuildContext context) {
+    DateTime date = widget.data.time!;
+    String dateToShow = "${date.day}/${date.month}/${date.year}";
+    String timeToShow = "${date.hour}:${date.minute}";
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueGrey[700],
@@ -126,7 +126,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                           Icon(Icons.location_on, color: Colors.blueGrey[700]),
                           // Destination icon
                           const SizedBox(width: 4),
-                          Text('Destination: ${widget.data.to}'),
+                          Text('Date: $dateToShow'),
                         ],
                       ),
                       Row(
@@ -138,7 +138,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                                 Icons.access_time_filled,
                                 color: Colors.blueGrey[700],
                               ),
-                              Text(' Time: ${widget.data.time}'),
+                              Text(' Time: $timeToShow'),
                             ],
                           ),
                           Row(
