@@ -162,7 +162,70 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
             ),
             MaterialButton(
               color: Colors.blueGrey[700],
-              onPressed: () async{},
+              onPressed: () async{
+                String userId = FirebaseAuth.instance.currentUser!.uid;
+                String tripId = widget.data.id!;
+                QuerySnapshot<Map<String, dynamic>> existingRequests = await FirebaseFirestore.instance
+                    .collection('requests')
+                    .where('userId', isEqualTo: userId)
+                    .where('tripId', isEqualTo: tripId)
+                    .get();
+
+                if(existingRequests.docs.isEmpty){
+                  await FirebaseFirestore.instance.collection('requests').add({
+                    'userId': FirebaseAuth.instance.currentUser!.uid,
+                    'tripId': widget.data.id,
+                    'status': 'requested',
+                  });
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Booking Successful'),
+                          content: const Text(
+                              'Your trip has been booked successfully!'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                'OK',
+                                style: TextStyle(color: Colors.blueGrey[700]),
+                              ),
+                            ),
+                          ],
+                        );
+                      });
+                }
+
+                else{
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Alert'),
+                          content: const Text(
+                              'You have already booked this trip, check my trips page'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                'OK',
+                                style: TextStyle(color: Colors.blueGrey[700]),
+                              ),
+                            ),
+                          ],
+                        );
+                      });
+                }
+
+
+
+
+              },
               child: const Text(
                 'Book',
                 style: TextStyle(color: Colors.white),
