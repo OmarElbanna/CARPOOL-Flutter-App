@@ -107,8 +107,7 @@ class _TripsScreenState extends State<TripsScreen> {
                             Icon(Icons.location_on,
                                 color: Colors.blueGrey[700]),
                             const SizedBox(width: 4),
-                            Text(
-                                'Date: $dateToShow'),
+                            Text('Date: $dateToShow'),
                           ],
                         ),
                         Row(
@@ -120,8 +119,7 @@ class _TripsScreenState extends State<TripsScreen> {
                                   Icons.access_time_filled,
                                   color: Colors.blueGrey[700],
                                 ),
-                                Text(
-                                    ' Time: $timeToShow'),
+                                Text(' Time: $timeToShow'),
                               ],
                             ),
                             Row(

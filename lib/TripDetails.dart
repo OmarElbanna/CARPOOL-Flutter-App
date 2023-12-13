@@ -8,8 +8,8 @@ import 'Trip.dart';
 
 class TripDetailsScreen extends StatefulWidget {
   final Trip data;
-  const TripDetailsScreen({super.key,required this.data});
 
+  const TripDetailsScreen({super.key, required this.data});
 
   @override
   State<TripDetailsScreen> createState() => _TripDetailsScreenState();
@@ -21,7 +21,6 @@ Map<PolylineId, Polyline> polylines = {};
 
 class _TripDetailsScreenState extends State<TripDetailsScreen> {
   Completer<GoogleMapController> _controller = Completer();
-
 
   @override
   void initState() {
@@ -45,9 +44,9 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
       BitmapDescriptor.defaultMarkerWithHue(90),
     );
 
-
-      // _getPolyline();
+    // _getPolyline();
   }
+
   @override
   Widget build(BuildContext context) {
     DateTime date = widget.data.time!;
@@ -68,7 +67,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-             Expanded(
+            Expanded(
               flex: 8,
               child: GoogleMap(
                 markers: Set<Marker>.of(markers.values),
@@ -162,16 +161,17 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
             ),
             MaterialButton(
               color: Colors.blueGrey[700],
-              onPressed: () async{
+              onPressed: () async {
                 String userId = FirebaseAuth.instance.currentUser!.uid;
                 String tripId = widget.data.id!;
-                QuerySnapshot<Map<String, dynamic>> existingRequests = await FirebaseFirestore.instance
-                    .collection('requests')
-                    .where('userId', isEqualTo: userId)
-                    .where('tripId', isEqualTo: tripId)
-                    .get();
+                QuerySnapshot<Map<String, dynamic>> existingRequests =
+                    await FirebaseFirestore.instance
+                        .collection('requests')
+                        .where('userId', isEqualTo: userId)
+                        .where('tripId', isEqualTo: tripId)
+                        .get();
 
-                if(existingRequests.docs.isEmpty){
+                if (existingRequests.docs.isEmpty) {
                   await FirebaseFirestore.instance.collection('requests').add({
                     'userId': FirebaseAuth.instance.currentUser!.uid,
                     'tripId': widget.data.id,
@@ -197,9 +197,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                           ],
                         );
                       });
-                }
-
-                else{
+                } else {
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -221,10 +219,6 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                         );
                       });
                 }
-
-
-
-
               },
               child: const Text(
                 'Book',
@@ -236,19 +230,21 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
       ),
     );
   }
+
   _addMarker(LatLng position, String id, BitmapDescriptor descriptor) {
     MarkerId markerId = MarkerId(id);
     Marker marker =
-    Marker(markerId: markerId, icon: descriptor, position: position);
+        Marker(markerId: markerId, icon: descriptor, position: position);
     markers[markerId] = marker;
   }
+
   _addPolyLine(List<LatLng> polylineCoordinates) {
     PolylineId id = PolylineId("poly");
     Polyline polyline = Polyline(
-      polylineId: id,
-      points: polylineCoordinates,
-      width: 6,color: Colors.blue
-    );
+        polylineId: id,
+        points: polylineCoordinates,
+        width: 6,
+        color: Colors.blue);
     polylines[id] = polyline;
     setState(() {});
   }

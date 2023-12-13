@@ -1,6 +1,6 @@
 import 'dart:ffi';
 
-class Trip{
+class Trip {
   String? from;
   String? to;
   int? price;
@@ -12,8 +12,15 @@ class Trip{
   double? to_lng;
   String? id;
 
-
-
-  Trip({this.from,this.to,this.time,this.price,this.status,this.from_lat,this.from_lng,this.to_lat,this.to_lng,this.id});
-
+  Trip(
+      {this.from,
+      this.to,
+      this.time,
+      this.price,
+      this.status,
+      this.from_lat,
+      this.from_lng,
+      this.to_lat,
+      this.to_lng,
+      this.id});
 }
