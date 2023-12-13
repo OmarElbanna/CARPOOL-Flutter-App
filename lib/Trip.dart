@@ -11,6 +11,9 @@ class Trip {
   double? to_lat;
   double? to_lng;
   String? id;
+  String? driverName;
+  String? carModel;
+  String? carColor;
 
   Trip(
       {this.from,
@@ -22,5 +25,8 @@ class Trip {
       this.from_lng,
       this.to_lat,
       this.to_lng,
-      this.id});
+      this.id,
+      this.carColor,
+      this.carModel,
+      this.driverName});
 }

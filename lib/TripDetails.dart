@@ -68,7 +68,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
         child: Column(
           children: [
             Expanded(
-              flex: 8,
+              flex: 7,
               child: GoogleMap(
                 markers: Set<Marker>.of(markers.values),
                 polylines: Set<Polyline>.of(polylines.values),
@@ -82,7 +82,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
               ),
             ),
             Expanded(
-              flex: 2,
+              flex: 3,
               child: Card(
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
@@ -152,6 +152,24 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                               ),
                             ],
                           ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Icon(Icons.person, color: Colors.blueGrey[700]),
+                          Text("Driver Name : ${widget.data.driverName!}"),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Icon(Icons.car_rental, color: Colors.blueGrey[700]),
+                          Text("Car Model : ${widget.data.carModel!}"),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Icon(Icons.color_lens_rounded, color: Colors.blueGrey[700]),
+                          Text("Car Color : ${widget.data.carColor!}"),
                         ],
                       ),
                     ],

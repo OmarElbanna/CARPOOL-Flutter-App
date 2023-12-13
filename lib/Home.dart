@@ -152,7 +152,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
-                    onTap: () {
+                    onTap: () async {
+                      String driverId = firebaseTrips[index]['driverId'];
+                      final driverDoc = await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(driverId)
+                          .get();
+                      final driverInfo = driverDoc.data();
                       Trip trip = Trip(
                           from: firebaseTrips[index]['from'],
                           to: firebaseTrips[index]['to'],
@@ -162,7 +168,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           from_lng: firebaseTrips[index]['from_lng'],
                           to_lat: firebaseTrips[index]['to_lat'],
                           to_lng: firebaseTrips[index]['to_lng'],
-                          id: firebaseTrips[index].id);
+                          id: firebaseTrips[index].id,
+                          driverName:
+                              "${driverInfo!['firstName']} ${driverInfo['lastName']}",
+                          carModel: driverInfo['carModel'],
+                          carColor: driverInfo['carColor']);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
