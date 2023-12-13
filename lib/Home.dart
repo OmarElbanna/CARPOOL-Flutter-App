@@ -97,6 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           final firebaseTrips = snapshot.data!.docs;
 
+
           return ListView.builder(
             itemCount: firebaseTrips.length,
             itemBuilder: (context, index) {
@@ -177,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     onTap: () {
                       Trip trip = Trip(from: firebaseTrips[index]['from'],to: firebaseTrips[index]['to'],price: firebaseTrips[index]['price'],time: firebaseTrips[index]['time'],
-                      from_lat: firebaseTrips[index]['from_lat'],from_lng: firebaseTrips[index]['from_lng'],to_lat: firebaseTrips[index]['to_lat'],to_lng:firebaseTrips[index]['to_lng'] );
+                      from_lat: firebaseTrips[index]['from_lat'],from_lng: firebaseTrips[index]['from_lng'],to_lat: firebaseTrips[index]['to_lat'],to_lng:firebaseTrips[index]['to_lng'],id:firebaseTrips[index].id  );
                       Navigator.push(
                         context,
                         MaterialPageRoute(

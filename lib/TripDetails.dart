@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -7,6 +9,7 @@ import 'Trip.dart';
 class TripDetailsScreen extends StatefulWidget {
   final Trip data;
   const TripDetailsScreen({super.key,required this.data});
+
 
   @override
   State<TripDetailsScreen> createState() => _TripDetailsScreenState();
@@ -159,28 +162,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
             ),
             MaterialButton(
               color: Colors.blueGrey[700],
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Booking Successful'),
-                        content: const Text(
-                            'Your trip has been booked successfully!'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(
-                              'OK',
-                              style: TextStyle(color: Colors.blueGrey[700]),
-                            ),
-                          ),
-                        ],
-                      );
-                    });
-              },
+              onPressed: () async{},
               child: const Text(
                 'Book',
                 style: TextStyle(color: Colors.white),
