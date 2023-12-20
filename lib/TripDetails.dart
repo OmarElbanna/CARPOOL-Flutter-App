@@ -263,7 +263,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                   )
                 : Text(
                     "Status : ${widget.data.status}",
-                    style: TextStyle(color: Colors.black, fontSize: 25),
+                    style: TextStyle(color:widget.data.status=='accepted'?Colors.green : widget.data.status == 'rejected'?Colors.red : null , fontSize: 25),
                   ),
           ],
         ),

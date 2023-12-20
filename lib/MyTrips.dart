@@ -146,7 +146,7 @@ class _TripsScreenState extends State<TripsScreen> {
                                         'Finished'
                                 ? Text(
                                     'Status: ${trips[index]['details']['status']}')
-                                : Text('Status: ${trips[index]['status']}')
+                                : Text('Status: ${trips[index]['status']}',style: TextStyle(color:trips[index]['status']=='accepted'?Colors.green : trips[index]['status'] == 'rejected'?Colors.red : null ))
                           ],
                         )
                       ],
