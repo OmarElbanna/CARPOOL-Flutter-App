@@ -141,7 +141,12 @@ class _TripsScreenState extends State<TripsScreen> {
                           children: [
                             Icon(Icons.error_outline_rounded,
                                 color: Colors.blueGrey[700]),
-                            Text('Status: ${trips[index]['status']}')
+                            trips[index]['status'] == 'accepted' &&
+                                    trips[index]['details']['status'] ==
+                                        'Finished'
+                                ? Text(
+                                    'Status: ${trips[index]['details']['status']}')
+                                : Text('Status: ${trips[index]['status']}')
                           ],
                         )
                       ],
@@ -167,7 +172,11 @@ class _TripsScreenState extends State<TripsScreen> {
                                 "${driverInfo!['firstName']} ${driverInfo['lastName']}",
                             carModel: driverInfo['carModel'],
                             carColor: driverInfo['carColor'],
-                            status: trips[index]['status']);
+                            status: trips[index]['status'] == 'accepted' &&
+                                    trips[index]['details']['status'] ==
+                                        'Finished'
+                                ? trips[index]['details']['status']
+                                : trips[index]['status']);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
