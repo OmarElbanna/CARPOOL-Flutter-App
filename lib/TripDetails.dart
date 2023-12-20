@@ -23,6 +23,7 @@ Map<PolylineId, Polyline> polylines = {};
 
 class _TripDetailsScreenState extends State<TripDetailsScreen> {
   Completer<GoogleMapController> _controller = Completer();
+  bool bypass = false;
 
   @override
   void initState() {
@@ -56,6 +57,22 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
     String timeToShow = "${date.hour}:${date.minute}";
     return Scaffold(
       appBar: AppBar(
+        actions: widget.isBooking? [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Switch(
+              value: bypass, // Set the initial value of the switch
+              onChanged: (bool value) {
+                setState(() {
+                  bypass = value;
+                });
+              },
+              activeColor: Colors.green, // Color when the switch is ON
+              inactiveTrackColor:
+                  Colors.red, // Color of the switch track when OFF
+            ),
+          ),
+        ] : null ,
         backgroundColor: Colors.blueGrey[700],
         title: widget.isBooking
             ? const Text(
@@ -225,7 +242,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                         } else {
                           reservationDeadline = DateTime.now();
                         }
-                        if (currentTime.isBefore(reservationDeadline)) {
+                        if (currentTime.isBefore(reservationDeadline) || bypass) {
                           await FirebaseFirestore.instance
                               .collection('requests')
                               .add({
