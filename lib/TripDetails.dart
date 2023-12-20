@@ -204,34 +204,80 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                               .get();
 
                       if (existingRequests.docs.isEmpty) {
-                        await FirebaseFirestore.instance
-                            .collection('requests')
-                            .add({
-                          'userId': FirebaseAuth.instance.currentUser!.uid,
-                          'tripId': widget.data.id,
-                          'status': 'requested',
-                        });
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('Booking Successful'),
-                                content: const Text(
-                                    'Your trip has been booked successfully!'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text(
-                                      'OK',
-                                      style: TextStyle(
-                                          color: Colors.blueGrey[700]),
+                        DateTime currentTime = DateTime.now();
+                        DateTime reservationDeadline;
+                        if (widget.data.time!.hour == 7) {
+                          reservationDeadline = DateTime(
+                            widget.data.time!.year,
+                            widget.data.time!.month,
+                            widget.data.time!.day - 1,
+                            22, // 10:00 pm
+                            0,
+                          );
+                        } else if (widget.data.time!.hour == 17) {
+                          reservationDeadline = DateTime(
+                            widget.data.time!.year,
+                            widget.data.time!.month,
+                            widget.data.time!.day,
+                            13, // 10:00 pm
+                            0,
+                          );
+                        } else {
+                          reservationDeadline = DateTime.now();
+                        }
+                        if (currentTime.isBefore(reservationDeadline)) {
+                          await FirebaseFirestore.instance
+                              .collection('requests')
+                              .add({
+                            'userId': FirebaseAuth.instance.currentUser!.uid,
+                            'tripId': widget.data.id,
+                            'status': 'requested',
+                          });
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('Booking Successful'),
+                                  content: const Text(
+                                      'Your trip has been booked successfully!'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(
+                                        'OK',
+                                        style: TextStyle(
+                                            color: Colors.blueGrey[700]),
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              );
-                            });
+                                  ],
+                                );
+                              });
+                        } else {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title:
+                                      const Text('Reservation Deadline Passed'),
+                                  content: const Text(
+                                      'Sorry, the reservation deadline for this trip has passed. Please book earlier.'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(
+                                        'OK',
+                                        style: TextStyle(
+                                            color: Colors.blueGrey[700]),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              });
+                        }
                       } else {
                         showDialog(
                             context: context,
@@ -263,7 +309,13 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                   )
                 : Text(
                     "Status : ${widget.data.status}",
-                    style: TextStyle(color:widget.data.status=='accepted'?Colors.green : widget.data.status == 'rejected'?Colors.red : null , fontSize: 25),
+                    style: TextStyle(
+                        color: widget.data.status == 'accepted'
+                            ? Colors.green
+                            : widget.data.status == 'rejected'
+                                ? Colors.red
+                                : null,
+                        fontSize: 25),
                   ),
           ],
         ),
