@@ -98,9 +98,9 @@ class _SignupScreenState extends State<SignupScreen> {
         centerTitle: true,
       ),
       body: isLoading
-          ? const Center(
+          ?  Center(
               child: CircularProgressIndicator(
-              color: Colors.white,
+              color: Colors.blueGrey[700],
             ))
           : SingleChildScrollView(
               child: Center(
@@ -240,12 +240,14 @@ class _SignupScreenState extends State<SignupScreen> {
                                   .set({
                                     'firstName': firstName.text,
                                     'lastName': lastName.text,
-                                    'phone': phone.text
+                                    'phone': phone.text,
+                                    'type':'user'
                                   })
                                   .then((value) => print("User Added"))
                                   .catchError((error) =>
                                       print("Failed to add user: $error"));
-                              await credential.user!.sendEmailVerification();
+                              // await credential.user!.sendEmailVerification();
+                              await FirebaseAuth.instance.signOut();
                               isLoading = false;
                               setState(() {});
                               AwesomeDialog(
@@ -253,9 +255,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                 dialogType: DialogType.success,
                                 animType: AnimType.rightSlide,
                                 title:
-                                    'Verification Mail has been sent successfully',
+                                    'Success',
                                 desc:
-                                    'Please check your email to verify your account',
+                                    'Your account has been created successfully',
                                 btnOkOnPress: () {
                                   Navigator.pushNamedAndRemoveUntil(
                                       context, '/login', (route) => false);

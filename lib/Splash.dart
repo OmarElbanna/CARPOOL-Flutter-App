@@ -17,8 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     Timer(const Duration(seconds: 3), () {
-      if (FirebaseAuth.instance.currentUser != null &&
-          FirebaseAuth.instance.currentUser!.emailVerified) {
+      if (FirebaseAuth.instance.currentUser != null) {
         Navigator.pushReplacementNamed(context, '/home');
       } else {
         print("No user");
