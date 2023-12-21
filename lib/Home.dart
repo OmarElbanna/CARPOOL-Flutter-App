@@ -33,9 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey[600],
       appBar: AppBar(
-        backgroundColor: Colors.blueGrey[700],
         title: const Text(
           "Book a Ride",
           style: TextStyle(
@@ -53,9 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (con, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
-              child: CircularProgressIndicator(
-                color: Colors.white,
-              ),
+              child: CircularProgressIndicator(),
             );
           }
           if (snapshot.hasError) {
@@ -64,10 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return const Text(
               'No available upcoming trips',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             );
           }
 
@@ -82,7 +75,6 @@ class _HomeScreenState extends State<HomeScreen> {
               return Padding(
                 padding: const EdgeInsets.all(3),
                 child: Card(
-                  color: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
@@ -91,13 +83,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     leading: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.location_on, color: Colors.blueGrey[700]),
+                        Icon(
+                          Icons.location_on,
+                        ),
                         // Starting point icon
                         const SizedBox(height: 4),
                         Container(
                           height: 16,
                           width: 1, // Vertical bar width
-                          color: Colors.blueGrey[700], // Vertical bar color
+                          // Vertical bar color
                         ),
                       ],
                     ),
@@ -119,8 +113,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.location_on,
-                                color: Colors.blueGrey[700]),
+                            Icon(
+                              Icons.location_on,
+                            ),
                             // Destination icon
                             const SizedBox(width: 4),
                             Text('Date: $dateToShow'),
@@ -133,7 +128,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Icon(
                                   Icons.access_time_filled,
-                                  color: Colors.blueGrey[700],
                                 ),
                                 Text(' Time: $timeToShow'),
                               ],
@@ -178,7 +172,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => TripDetailsScreen(data: trip,isBooking: true,),
+                          builder: (context) => TripDetailsScreen(
+                            data: trip,
+                            isBooking: true,
+                          ),
                         ),
                       );
                     },
@@ -202,8 +199,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Column(
                   children: [
                     UserAccountsDrawerHeader(
-                        decoration: BoxDecoration(color: Colors.blueGrey[700]),
-                        currentAccountPicture:  const CircleAvatar(
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(
+                          color: Colors.white,
+                          width: 2.0,
+                        ))), // Set the thickness of the bottom border
+                        currentAccountPicture: const CircleAvatar(
                           radius: 200,
                           backgroundImage: AssetImage("images/download.png"),
                         ),
@@ -211,11 +213,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Text(
                             "${userData['firstName']} ${userData['lastName']}",
                             style: const TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
                           ),
                           onTap: () {},
                         ),
-                        accountEmail: Text(userData['email'])),
+                        accountEmail: Text(
+                          userData['email'],
+                          style: TextStyle(color: Colors.white),
+                        )),
                     ListTile(
                       title: const Text("Account"),
                       leading: const Icon(Icons.account_circle_rounded),
@@ -233,7 +240,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     const Divider(
-                      thickness: 1,
+                      color: Colors.white,
+                      thickness: 2,
                     ),
                     ListTile(
                         title: const Text("My Trips"),
@@ -245,7 +253,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           });
                         }),
                     const Divider(
-                      thickness: 1,
+                      color: Colors.white,
+                      thickness: 2,
                     ),
                     ListTile(
                       title: const Text("Logout"),

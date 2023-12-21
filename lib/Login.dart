@@ -1,4 +1,3 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'Sqflite_Queries.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -46,7 +45,6 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        backgroundColor: Colors.blueGrey[700],
         title: const Text(
           "Login",
           style: TextStyle(
@@ -56,10 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
         centerTitle: true,
       ),
       body: isLoading
-          ?  Center(
-              child: CircularProgressIndicator(
-              color: Colors.blueGrey[700],
-            ))
+          ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Center(
                 child: Padding(
@@ -69,9 +64,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       // mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 70,
+                          child: Image.asset(
+                              "images/download-removebg-preview.png"),
+                        ),
                         SizedBox(
-                          height: 100,
-                          child: Image.asset("images/download.png"),
+                          height: 10,
                         ),
                         TextFormField(
                           validator: validateEmail,
@@ -110,9 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        MaterialButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15)),
+                        ElevatedButton(
                           onPressed: () async {
                             setState(() {
                               errorMessage = null;
@@ -134,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 String type = userData!['type'];
                                 if (type.compareTo("user") == 0) {
                                   print("User#############");
-                                  
+
                                   // await db.deleteData("DELETE FROM Users");
                                   String firstName = userData['firstName'];
                                   String lastName = userData['lastName'];
@@ -142,35 +140,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                   String phone = userData['phone'];
                                   String ID = credential.user!.uid;
 
-                                  await insertUser(ID, firstName, lastName, phone, emailDB);
-                                  
+                                  await insertUser(
+                                      ID, firstName, lastName, phone, emailDB);
+
                                   Navigator.pushReplacementNamed(
                                       context, '/home');
                                 } else {
                                   print("Driver#############");
                                   setState(() {
                                     isLoading = false;
-                                    errorMessage = 'This account has been registered as a Driver';
+                                    errorMessage =
+                                        'This account has been registered as a Driver';
                                   });
                                   await FirebaseAuth.instance.signOut();
                                 }
-
-                                // if (credential.user!.emailVerified) {
-                                //   Navigator.pushReplacementNamed(
-                                //       context, '/home');
-                                // } else {
-                                //   isLoading = false;
-                                //   setState(() {});
-                                //   AwesomeDialog(
-                                //     context: context,
-                                //     dialogType: DialogType.error,
-                                //     animType: AnimType.rightSlide,
-                                //     title: 'Unverified Account',
-                                //     desc:
-                                //         'Please check your email to verify your account',
-                                //     btnOkOnPress: () {},
-                                //   )..show();
-                                // }
                               } on FirebaseAuthException catch (e) {
                                 isLoading = false;
                                 setState(() {});
@@ -196,7 +179,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                             }
                           },
-                          color: Colors.blueGrey[700],
                           child: const Text(
                             "Login",
                             style: TextStyle(
@@ -211,15 +193,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Text("Don't have an account?"),
-                            MaterialButton(
+                            const SizedBox(width: 10),
+                            ElevatedButton(
                               onPressed: () {
                                 Navigator.pushNamed(context, '/signup_s');
                               },
                               child: Text(
                                 "Signup here",
-                                style: TextStyle(
-                                  color: Colors.blueGrey[700],
-                                ),
+                                style: TextStyle(),
                               ),
                             )
                           ],

@@ -88,7 +88,6 @@ class _SignupScreenState extends State<SignupScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        backgroundColor: Colors.blueGrey[700],
         title: const Text(
           "Signup",
           style: TextStyle(
@@ -98,10 +97,7 @@ class _SignupScreenState extends State<SignupScreen> {
         centerTitle: true,
       ),
       body: isLoading
-          ?  Center(
-              child: CircularProgressIndicator(
-              color: Colors.blueGrey[700],
-            ))
+          ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Center(
                   child: Padding(
@@ -123,7 +119,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 15,
                       ),
                       TextFormField(
                         controller: lastName,
@@ -137,7 +133,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 15,
                       ),
                       TextFormField(
                         controller: email,
@@ -152,7 +148,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 15,
                       ),
                       TextFormField(
                         controller: phone,
@@ -167,7 +163,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 15,
                       ),
                       TextFormField(
                         controller: password,
@@ -191,7 +187,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 15,
                       ),
                       TextFormField(
                         controller: confirmPassword,
@@ -216,8 +212,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                   BorderRadius.all(Radius.circular(5))),
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      MaterialButton(
+                      const SizedBox(height: 10),
+                      ElevatedButton(
                         onPressed: () async {
                           setState(() {
                             errorMessage = null;
@@ -241,7 +237,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                     'firstName': firstName.text,
                                     'lastName': lastName.text,
                                     'phone': phone.text,
-                                    'type':'user'
+                                    'type': 'user'
                                   })
                                   .then((value) => print("User Added"))
                                   .catchError((error) =>
@@ -254,8 +250,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 context: context,
                                 dialogType: DialogType.success,
                                 animType: AnimType.rightSlide,
-                                title:
-                                    'Success',
+                                title: 'Success',
                                 desc:
                                     'Your account has been created successfully',
                                 btnOkOnPress: () {
@@ -285,7 +280,6 @@ class _SignupScreenState extends State<SignupScreen> {
                             }
                           }
                         },
-                        color: Colors.blueGrey[700],
                         child: const Text(
                           "Signup",
                           style: TextStyle(
@@ -293,13 +287,16 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 7),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Text("Already have an account"),
-                          GestureDetector(
-                            onTap: () {
+                          SizedBox(
+                            width: 10,
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
                               // Navigator.popAndPushNamed(context, '/login');
                               Navigator.pushNamedAndRemoveUntil(
                                   context, '/login', (route) => false);
@@ -307,8 +304,8 @@ class _SignupScreenState extends State<SignupScreen> {
                             child: Text(
                               "  Login",
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blueGrey[700]),
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           )
                         ],

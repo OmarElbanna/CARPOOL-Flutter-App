@@ -25,9 +25,7 @@ class _TripsScreenState extends State<TripsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey[600],
       appBar: AppBar(
-        backgroundColor: Colors.blueGrey[700],
         title: const Text(
           "My Trips",
           style: TextStyle(
@@ -42,9 +40,7 @@ class _TripsScreenState extends State<TripsScreen> {
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
-              child: CircularProgressIndicator(
-                color: Colors.white,
-              ),
+              child: CircularProgressIndicator(),
             );
           }
           if (snapshot.hasError) {
@@ -69,7 +65,6 @@ class _TripsScreenState extends State<TripsScreen> {
               return Padding(
                 padding: const EdgeInsets.all(3),
                 child: Card(
-                  color: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
@@ -78,12 +73,13 @@ class _TripsScreenState extends State<TripsScreen> {
                     leading: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.location_on, color: Colors.blueGrey[700]),
+                        Icon(
+                          Icons.location_on,
+                        ),
                         const SizedBox(height: 4),
                         Container(
                           height: 16,
-                          width: 1, // Vertical bar width
-                          color: Colors.blueGrey[700], // Vertical bar color
+                          width: 1, // Vertical bar width// Vertical bar color
                         ),
                       ],
                     ),
@@ -105,8 +101,9 @@ class _TripsScreenState extends State<TripsScreen> {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.location_on,
-                                color: Colors.blueGrey[700]),
+                            Icon(
+                              Icons.location_on,
+                            ),
                             const SizedBox(width: 4),
                             Text('Date: $dateToShow'),
                           ],
@@ -118,7 +115,6 @@ class _TripsScreenState extends State<TripsScreen> {
                               children: [
                                 Icon(
                                   Icons.access_time_filled,
-                                  color: Colors.blueGrey[700],
                                 ),
                                 Text(' Time: $timeToShow'),
                               ],
@@ -139,14 +135,23 @@ class _TripsScreenState extends State<TripsScreen> {
                         ),
                         Row(
                           children: [
-                            Icon(Icons.error_outline_rounded,
-                                color: Colors.blueGrey[700]),
+                            Icon(
+                              Icons.error_outlined,
+                            ),
                             trips[index]['status'] == 'accepted' &&
                                     trips[index]['details']['status'] ==
                                         'Finished'
                                 ? Text(
                                     'Status: ${trips[index]['details']['status']}')
-                                : Text('Status: ${trips[index]['status']}',style: TextStyle(color:trips[index]['status']=='accepted'?Colors.green : trips[index]['status'] == 'rejected'?Colors.red : null ))
+                                : Text('Status: ${trips[index]['status']}',
+                                    style: TextStyle(
+                                        color:
+                                            trips[index]['status'] == 'accepted'
+                                                ? Colors.green
+                                                : trips[index]['status'] ==
+                                                        'rejected'
+                                                    ? Colors.red
+                                                    : null))
                           ],
                         )
                       ],

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -57,23 +58,25 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
     String timeToShow = "${date.hour}:${date.minute}";
     return Scaffold(
       appBar: AppBar(
-        actions: widget.isBooking? [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Switch(
-              value: bypass, // Set the initial value of the switch
-              onChanged: (bool value) {
-                setState(() {
-                  bypass = value;
-                });
-              },
-              activeColor: Colors.green, // Color when the switch is ON
-              inactiveTrackColor:
-                  Colors.red, // Color of the switch track when OFF
-            ),
-          ),
-        ] : null ,
-        backgroundColor: Colors.blueGrey[700],
+        actions: widget.isBooking
+            ? [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Switch(
+                    value: bypass, // Set the initial value of the switch
+                    onChanged: (bool value) {
+                      setState(() {
+                        bypass = value;
+                      });
+                    },
+                    // activeColor: Colors.green,
+                    activeTrackColor:
+                        Colors.green, // Color when the switch is ON
+                    // Color of the switch track when OFF
+                  ),
+                ),
+              ]
+            : null,
         title: widget.isBooking
             ? const Text(
                 "Confirm Booking",
@@ -110,7 +113,6 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
             Expanded(
               flex: 3,
               child: Card(
-                color: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
@@ -120,12 +122,13 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Icon(Icons.location_on, color: Colors.blueGrey[700]),
+                      Icon(
+                        Icons.location_on,
+                      ),
                       const SizedBox(height: 4),
                       Container(
                         height: 25,
                         width: 1,
-                        color: Colors.blueGrey[700],
                       ),
                     ],
                   ),
@@ -147,7 +150,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.location_on, color: Colors.blueGrey[700]),
+                          Icon(Icons.location_on),
                           // Destination icon
                           const SizedBox(width: 4),
                           Text('Date: $dateToShow'),
@@ -159,7 +162,6 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                             children: [
                               Icon(
                                 Icons.access_time_filled,
-                                color: Colors.blueGrey[700],
                               ),
                               Text(' Time: $timeToShow'),
                             ],
@@ -168,13 +170,15 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                       ),
                       Row(
                         children: [
-                          Icon(Icons.person, color: Colors.blueGrey[700]),
+                          Icon(
+                            Icons.person,
+                          ),
                           Text("Driver Name : ${widget.data.driverName!}"),
                         ],
                       ),
                       Row(
                         children: [
-                          Icon(Icons.car_rental, color: Colors.blueGrey[700]),
+                          Icon(Icons.car_rental),
                           Text("Car Model : ${widget.data.carModel!}"),
                         ],
                       ),
@@ -183,8 +187,9 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.color_lens_rounded,
-                                  color: Colors.blueGrey[700]),
+                              Icon(
+                                Icons.color_lens_rounded,
+                              ),
                               Text("Car Color : ${widget.data.carColor!}"),
                             ],
                           ),
@@ -208,8 +213,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
               ),
             ),
             widget.isBooking
-                ? MaterialButton(
-                    color: Colors.blueGrey[700],
+                ? ElevatedButton(
                     onPressed: () async {
                       String userId = FirebaseAuth.instance.currentUser!.uid;
                       String tripId = widget.data.id!;
@@ -242,7 +246,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                         } else {
                           reservationDeadline = DateTime.now();
                         }
-                        if (currentTime.isBefore(reservationDeadline) || bypass) {
+                        if (currentTime.isBefore(reservationDeadline) ||
+                            bypass) {
                           await FirebaseFirestore.instance
                               .collection('requests')
                               .add({
@@ -250,78 +255,43 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                             'tripId': widget.data.id,
                             'status': 'requested',
                           });
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Text('Booking Successful'),
-                                  content: const Text(
-                                      'Your trip has been booked successfully!'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text(
-                                        'OK',
-                                        style: TextStyle(
-                                            color: Colors.blueGrey[700]),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              });
+                          AwesomeDialog(
+                            context: context,
+                            dialogType: DialogType.success,
+                            animType: AnimType.rightSlide,
+                            title: 'Success',
+                            desc:
+                            'Your trip has been booked successfully',
+                            btnOkOnPress: () {
+                            },
+                          )..show();
                         } else {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title:
-                                      const Text('Reservation Deadline Passed'),
-                                  content: const Text(
-                                      'Sorry, the reservation deadline for this trip has passed. Please book earlier.'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text(
-                                        'OK',
-                                        style: TextStyle(
-                                            color: Colors.blueGrey[700]),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              });
+                          AwesomeDialog(
+                            context: context,
+                            dialogType: DialogType.error,
+                            animType: AnimType.rightSlide,
+                            title: 'Failed',
+                            desc:
+                            'Sorry, the reservation deadline for this trip has passed. For testing purposes toggle the switch in the app bar',
+                            btnOkOnPress: () {
+                            },
+                          )..show();
                         }
                       } else {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('Alert'),
-                                content: const Text(
-                                    'You have already booked this trip, check my trips page'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text(
-                                      'OK',
-                                      style: TextStyle(
-                                          color: Colors.blueGrey[700]),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            });
+                        AwesomeDialog(
+                          context: context,
+                          dialogType: DialogType.info,
+                          animType: AnimType.rightSlide,
+                          title: 'Alert',
+                          desc:
+                          'You have already booked this trip, check my trips page',
+                          btnOkOnPress: () {
+                          },
+                        )..show();
                       }
                     },
                     child: const Text(
                       'Book',
-                      style: TextStyle(color: Colors.white),
                     ),
                   )
                 : Text(

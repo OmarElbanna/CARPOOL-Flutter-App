@@ -51,7 +51,6 @@ class _AccountScreenState extends State<AccountScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        backgroundColor: Colors.blueGrey[700],
         title: const Text(
           "My Account",
           style: TextStyle(
@@ -61,17 +60,13 @@ class _AccountScreenState extends State<AccountScreen> {
         centerTitle: true,
       ),
       body: FutureBuilder(
-        future:
-            getUserData(user.uid),
+        future: getUserData(user.uid),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return  Center(
-              child: CircularProgressIndicator(
-                color: Colors.blueGrey[700],
-              ),
+            return Center(
+              child: CircularProgressIndicator(),
             );
           }
-
 
           final userData = snapshot.data![0] as Map<String, dynamic>;
           firstName.text = userData['firstName'];
@@ -133,66 +128,55 @@ class _AccountScreenState extends State<AccountScreen> {
                       height: 20,
                     ),
                     const SizedBox(height: 20),
-                    MaterialButton(
-                      onPressed: () async{
+                    ElevatedButton(
+                      onPressed: () async {
                         if (_formKey.currentState?.validate() ?? false) {
                           Connectivity connectivity = Connectivity();
                           final status = await connectivity.checkConnectivity();
                           print(status);
                           if (status == ConnectivityResult.wifi) {
-                            await updateUser(user.uid, firstName.text, lastName.text, phone.text, user.email!);
+                            await updateUser(user.uid, firstName.text,
+                                lastName.text, phone.text, user.email!);
                             FirebaseFirestore.instance
                                 .collection('users')
                                 .doc(user.uid)
                                 .update({
-                              'firstName': firstName.text,
-                              'lastName': lastName.text,
-                              'phone': phone.text
-                            })
-                                .then((value) =>
-                            AwesomeDialog(
-                              context: context,
-                              dialogType: DialogType.success,
-                              animType: AnimType.rightSlide,
-                              title: 'Success',
-                              desc: 'Successfully updated user account',
-                              btnOkOnPress: () {},
-                            )
-                              ..show())
-                                .catchError((error) =>
-                            AwesomeDialog(
-                              context: context,
-                              dialogType: DialogType.error,
-                              animType: AnimType.rightSlide,
-                              title: 'Error',
-                              desc:
-                              'Something wrong happened, please try again later',
-                              btnOkOnPress: () {},
-                            )
-                              ..show());
+                                  'firstName': firstName.text,
+                                  'lastName': lastName.text,
+                                  'phone': phone.text
+                                })
+                                .then((value) => AwesomeDialog(
+                                      context: context,
+                                      dialogType: DialogType.success,
+                                      animType: AnimType.rightSlide,
+                                      title: 'Success',
+                                      desc: 'Successfully updated user account',
+                                      btnOkOnPress: () {},
+                                    )..show())
+                                .catchError((error) => AwesomeDialog(
+                                      context: context,
+                                      dialogType: DialogType.error,
+                                      animType: AnimType.rightSlide,
+                                      title: 'Error',
+                                      desc:
+                                          'Something wrong happened, please try again later',
+                                      btnOkOnPress: () {},
+                                    )..show());
                             widget.updateCallback();
-                          }
-                          else {
+                          } else {
                             AwesomeDialog(
                               context: context,
                               dialogType: DialogType.error,
                               animType: AnimType.rightSlide,
                               title: 'Error',
-                              desc:
-                              'No internet connection',
+                              desc: 'No internet connection',
                               btnOkOnPress: () {},
-                            )
-                              ..show();
-
+                            )..show();
                           }
                         }
                       },
-                      color: Colors.blueGrey[700],
                       child: const Text(
                         "Save",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
                       ),
                     ),
                   ],

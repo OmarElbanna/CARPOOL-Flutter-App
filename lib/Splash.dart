@@ -29,19 +29,16 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 341,
-              width: 466,
-              child: Image.asset("images/Logo2.png"),
-            ),
-            SpinKitFadingCircle(
-              color: Colors.blueGrey[700],
-            ),
-          ],
-        ));
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          height: 341,
+          width: 466,
+          child: Image.asset("images/Logo2.png"),
+        ),
+        CircularProgressIndicator(),
+      ],
+    ));
   }
 }
