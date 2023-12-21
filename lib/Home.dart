@@ -43,11 +43,11 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
       ),
       body: Center(
-          child: FutureBuilder(
-        future: FirebaseFirestore.instance
+          child: StreamBuilder(
+        stream: FirebaseFirestore.instance
             .collection('trips')
             .where('time', isGreaterThan: DateTime.now())
-            .get(),
+            .snapshots(),
         builder: (con, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
