@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:carpool/Account.dart';
-import 'package:carpool/Database.dart';
+import 'package:carpool/views/my%20account/Account.dart';
+import 'package:carpool/models/Database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'Trip.dart';
-import 'TripDetails.dart';
-import 'package:carpool/Sqflite_Queries.dart';
+import '../models/Trip.dart';
+import 'reservation/TripDetails.dart';
+import 'package:carpool/services/Database/Sqflite_Queries.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

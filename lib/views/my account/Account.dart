@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'Sqflite_Queries.dart';
+import '../../services/Database/Sqflite_Queries.dart';
 
 class AccountScreen extends StatefulWidget {
   final Function() updateCallback;
