@@ -48,7 +48,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
       BitmapDescriptor.defaultMarkerWithHue(90),
     );
 
-    // _getPolyline();
+    _getPolyline();
   }
 
   @override
