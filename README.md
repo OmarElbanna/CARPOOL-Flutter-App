@@ -1,6 +1,9 @@
 # Carpool Flutter Project
-
+<div align="center">
+  <img src="https://github.com/OmarElbanna/CARPOOL-Flutter-App/assets/96841295/a0ed9e45-cc15-4ce2-b6fd-697eec18da36" alt="Carpool Logo">
+</div>
 Carpool is a rideshare application designed to streamline rideshare services for the AinShams University community, specifically focusing on the Faculty of Engineering. This project aims to create a customized version catering to the transportation needs of students within the university.
+
 
 ## Overview
 
