@@ -4,7 +4,7 @@ Carpool is a rideshare application designed to streamline rideshare services for
 
 ## Overview
 
-In this version of the application, Carpool will concentrate on rides to or from Abdu-Basha and Abbaseya square, with designated destination points at Gate 3 and 4. The service will operate at fixed times, with a starting ride at 7:30 am from different locations and a return ride at 5:30 pm from the Faculty of Engineering campus.
+The service will operate at fixed times, with a starting ride at 7:30 am from different locations and a return ride at 5:30 pm from the Faculty of Engineering campus.
 
 To foster a sense of trust and security, users are required to sign in with an active account ending in @eng.asu.edu.eg, ensuring a closed community environment. Notably, Carpool adopts a unique strategy, being operated by students for students.
 
